@@ -437,7 +437,7 @@ footer .sm{font-size:13px;opacity:.6;letter-spacing:.03em}
       <div class="stat rv"><div class="num" data-count="5">5</div><div class="lbl">Biomes</div></div>
       <div class="stat rv rv-2"><div class="num" data-count="8">8</div><div class="lbl">Nights to survive</div></div>
       <div class="stat rv rv-3"><div class="num" data-count="4">4</div><div class="lbl">Ork breeds</div></div>
-      <div class="stat rv rv-4"><div class="num" data-suffix="∞">1</div><div class="lbl">Bloodline</div></div>
+      <div class="stat rv rv-4"><div class="num">∞</div><div class="lbl">The bloodline</div></div>
     </div>
   </div>
 </div>
@@ -478,8 +478,8 @@ footer .sm{font-size:13px;opacity:.6;letter-spacing:.03em}
     <div class="sec-head rv"><span class="eyebrow">One island, five lands</span><h2>The Island</h2><div class="rule"></div>
       <p>The keep sits at the heart. The horde holds the edges. Click any land to see it full-size.</p></div>
     <div class="biomes-grid">
-      <a class="biome b1 rv" href="screenshots/castle-after.png"><img loading="lazy" src="screenshots/castle-after.png" alt="Forest — the keep">
-        <span class="lab"><span class="n">Forest</span><span class="d"> — the keep &amp; its safe-zone heart</span></span></a>
+      <a class="biome b1 rv" href="screenshots/forest-biome.png"><img loading="lazy" src="screenshots/forest-biome.png" alt="Forest biome — woodland, rivers and the keep's safe-zone heart">
+        <span class="lab"><span class="n">Forest</span><span class="d"> — river-cut woodland, the keep's safe-zone heart</span></span></a>
       <a class="biome rv rv-2" href="screenshots/snow-biome.png"><img loading="lazy" src="screenshots/snow-biome.png" alt="Snow biome">
         <span class="lab"><span class="n">Snow</span><span class="d"> — frozen pinewood</span></span></a>
       <a class="biome rv" href="screenshots/desert-biome.png"><img loading="lazy" src="screenshots/desert-biome.png" alt="Desert biome">
@@ -603,21 +603,34 @@ if(ba){
   inp.addEventListener('input',()=>set(inp.value));set(50);
 }
 
-// scroll reveal + count-up
-const io=new IntersectionObserver((ents)=>{
-  ents.forEach(e=>{
-    if(!e.isIntersecting)return;
-    e.target.classList.add('in');
-    const n=e.target.querySelector?.('[data-count]');
-    if(n&&!n.dataset.done){countUp(n);}
-    io.unobserve(e.target);
-  });
-},{threshold:.16});
-document.querySelectorAll('.rv').forEach(el=>io.observe(el));
+// scroll reveal + count-up (fail-safe: content can never stay invisible)
 function countUp(n){
-  n.dataset.done=1;const tgt=+n.dataset.count;let c=0;const step=Math.max(1,Math.ceil(tgt/24));
+  if(n.dataset.done)return;n.dataset.done=1;
+  const tgt=+n.dataset.count;let c=0;const step=Math.max(1,Math.ceil(tgt/24));
   const t=setInterval(()=>{c+=step;if(c>=tgt){c=tgt;clearInterval(t);}n.textContent=c;},34);
 }
+function reveal(el){
+  if(el.classList.contains('in'))return;
+  el.classList.add('in');
+  const n=el.querySelector&&el.querySelector('[data-count]');
+  if(n)countUp(n);
+}
+const io=new IntersectionObserver((ents)=>{
+  ents.forEach(e=>{if(e.isIntersecting){reveal(e.target);io.unobserve(e.target);}});
+},{threshold:0,rootMargin:'0px 0px -6% 0px'});
+const rvEls=[...document.querySelectorAll('.rv')];
+rvEls.forEach(el=>io.observe(el));
+// failsafe sweep: reveal anything sitting in (or above) the viewport that the
+// observer missed (e.g. tab was backgrounded on load) — runs on load + each scroll.
+function sweep(){
+  rvEls.forEach(el=>{
+    if(el.classList.contains('in'))return;
+    if(el.getBoundingClientRect().top < innerHeight*0.95){reveal(el);io.unobserve(el);}
+  });
+}
+window.addEventListener('load',sweep);
+window.addEventListener('scroll',sweep,{passive:true});
+sweep();
 
 // lightbox
 const lb=document.getElementById('lb'),lbi=lb.querySelector('img');
