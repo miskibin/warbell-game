@@ -131,15 +131,53 @@ section{padding:72px 0}
 .card p{color:var(--ink-dim);font-size:16px}
 
 /* ── Gallery ── */
-.gallery{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+.gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:32px}
 .gallery img{
   width:100%;height:100%;object-fit:cover;border-radius:6px;display:block;
   border:1px solid var(--panel-edge);box-shadow:0 6px 18px var(--shadow);
   aspect-ratio:16/9;cursor:zoom-in;transition:transform .2s ease,border-color .2s ease;
 }
 .gallery img:hover{transform:scale(1.015);border-color:var(--gold)}
-.gallery a:first-child{grid-column:1/-1}
-.gallery a:first-child img{aspect-ratio:21/9}
+
+/* ── Before/After slider ── */
+.ba-outer{max-width:900px;margin:0 auto}
+.ba-label{text-align:center;color:var(--ink-dim);font-size:15px;margin-bottom:16px;font-style:italic}
+.ba-wrap{
+  position:relative;border-radius:8px;overflow:hidden;
+  border:1px solid var(--panel-edge);box-shadow:0 10px 30px var(--shadow);
+  aspect-ratio:16/9;user-select:none;
+}
+.ba-wrap img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.ba-after{
+  position:absolute;inset:0;overflow:hidden;
+  clip-path:inset(0 calc(100% - var(--pos,50%)) 0 0);
+}
+.ba-after img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.ba-divider{
+  position:absolute;top:0;bottom:0;width:2px;background:var(--gold);
+  left:var(--pos,50%);transform:translateX(-50%);pointer-events:none;z-index:3;
+}
+.ba-handle{
+  position:absolute;top:50%;left:var(--pos,50%);transform:translate(-50%,-50%);
+  width:38px;height:38px;border-radius:50%;
+  background:var(--gold);border:2px solid #fff;
+  display:flex;align-items:center;justify-content:center;
+  pointer-events:none;z-index:4;box-shadow:0 2px 8px rgba(0,0,0,.6);
+}
+.ba-handle svg{width:18px;height:18px;fill:#1a1209}
+.ba-slider{
+  position:absolute;inset:0;width:100%;height:100%;
+  opacity:0;cursor:ew-resize;z-index:5;
+  -webkit-appearance:none;appearance:none;
+  background:transparent;margin:0;
+}
+.ba-pill{
+  position:absolute;top:12px;padding:3px 10px;border-radius:20px;
+  font-family:'Cinzel',serif;font-size:12px;letter-spacing:.06em;
+  background:rgba(0,0,0,.55);color:var(--ink);z-index:3;pointer-events:none;
+}
+.ba-pill.before{left:12px}
+.ba-pill.after{right:12px}
 
 /* ── Controls ── */
 .controls{max-width:760px;margin:0 auto;background:var(--panel);border:1px solid var(--panel-edge);
@@ -219,17 +257,29 @@ footer .small{font-size:14px;margin-top:10px;opacity:.7}
 <section>
   <div class="wrap">
     <div class="section-head">
-      <h2>The island</h2>
+      <h2>Screenshots</h2>
+      <p>Drag the slider to see what stone and gold can build.</p>
     </div>
+
+    <div class="ba-outer">
+      <p class="ba-label">Castle — bare ground vs. fully walled</p>
+      <div class="ba-wrap" id="ba">
+        <img src="screenshots/castle-before.png" alt="Castle before upgrading">
+        <div class="ba-after"><img src="screenshots/castle-after.png" alt="Castle after upgrading"></div>
+        <div class="ba-divider"></div>
+        <div class="ba-handle">
+          <svg viewBox="0 0 20 20"><path d="M7 4l-4 6 4 6M13 4l4 6-4 6"/></svg>
+        </div>
+        <input type="range" class="ba-slider" min="0" max="100" value="50" aria-label="Before/after comparison">
+        <span class="ba-pill before">BEFORE</span>
+        <span class="ba-pill after">AFTER</span>
+      </div>
+    </div>
+
     <div class="gallery">
-      <a href="https://github.com/user-attachments/assets/9b80b27f-688b-4f4d-b13d-7919d156d598"><img loading="lazy" src="https://github.com/user-attachments/assets/9b80b27f-688b-4f4d-b13d-7919d156d598" alt="Warbell — the keep at the heart of the island"></a>
-      <a href="https://github.com/user-attachments/assets/b699a1cc-7df4-47c3-ab31-1b5a8fd670c6"><img loading="lazy" src="https://github.com/user-attachments/assets/b699a1cc-7df4-47c3-ab31-1b5a8fd670c6" alt="Warbell screenshot"></a>
-      <a href="https://github.com/user-attachments/assets/3d6e62b8-6159-4055-9e25-6a1dc361f8e3"><img loading="lazy" src="https://github.com/user-attachments/assets/3d6e62b8-6159-4055-9e25-6a1dc361f8e3" alt="Warbell screenshot"></a>
-      <a href="https://github.com/user-attachments/assets/09f16620-9098-4f3d-9eda-9a4e4694cad7"><img loading="lazy" src="https://github.com/user-attachments/assets/09f16620-9098-4f3d-9eda-9a4e4694cad7" alt="Warbell screenshot"></a>
-      <a href="https://github.com/user-attachments/assets/c76da516-d9ee-4776-9507-b6a5b3ca9b78"><img loading="lazy" src="https://github.com/user-attachments/assets/c76da516-d9ee-4776-9507-b6a5b3ca9b78" alt="Warbell screenshot"></a>
-      <a href="https://github.com/user-attachments/assets/445809c9-5443-4e2c-857f-f8b3f228a9bc"><img loading="lazy" src="https://github.com/user-attachments/assets/445809c9-5443-4e2c-857f-f8b3f228a9bc" alt="Warbell screenshot"></a>
-      <a href="https://github.com/user-attachments/assets/e9fd7230-3756-464c-aff6-1f39bb616313"><img loading="lazy" src="https://github.com/user-attachments/assets/e9fd7230-3756-464c-aff6-1f39bb616313" alt="Warbell screenshot"></a>
-      <a href="https://github.com/user-attachments/assets/09f16620-9098-4f3d-9eda-9a4e4694cad7" style="display:none"></a>
+      <a href="screenshots/start-screen.png"><img loading="lazy" src="screenshots/start-screen.png" alt="Warbell — title screen"></a>
+      <a href="screenshots/fight-orks.png"><img loading="lazy" src="screenshots/fight-orks.png" alt="Warbell — fighting orks at night"></a>
+      <a href="screenshots/gather-resources.png"><img loading="lazy" src="screenshots/gather-resources.png" alt="Warbell — gathering resources in the desert biome"></a>
     </div>
   </div>
 </section>
@@ -264,6 +314,17 @@ footer .small{font-size:14px;margin-top:10px;opacity:.7}
 
 <div class="lb" id="lb"><img src="" alt=""></div>
 <script>
+// before/after slider
+const ba=document.getElementById('ba');
+if(ba){
+  const slider=ba.querySelector('.ba-slider');
+  function setPos(v){
+    ba.style.setProperty('--pos',v+'%');
+  }
+  slider.addEventListener('input',()=>setPos(slider.value));
+  setPos(50);
+}
+
 // lightbox
 const lb=document.getElementById('lb'),lbi=lb.querySelector('img');
 document.querySelectorAll('.gallery a').forEach(a=>{
