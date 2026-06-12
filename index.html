@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Warbell — defend the keep</title>
+<meta name="description" content="Warbell — a knight defends a central castle against night-wave ork sieges across a five-biome island. Real-time combat, economy, an upgrade tree, and a bloodline succession loop.">
+
+<!-- Open Graph / social cards -->
+<meta property="og:title" content="Warbell">
+<meta property="og:description" content="A knight defends the keep against nightly ork sieges across a five-biome island.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://github.com/user-attachments/assets/9b80b27f-688b-4f4d-b13d-7919d156d598">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=EB+Garamond:ital@0;1&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --bg:#15110c;
+  --bg2:#1d1812;
+  --panel:#241d15;
+  --panel-edge:#3a2f22;
+  --ink:#e9dcc4;
+  --ink-dim:#b6a684;
+  --gold:#d8a24a;
+  --gold-hi:#f0c673;
+  --blood:#8c2f24;
+  --blood-hi:#b8463a;
+  --shadow:rgba(0,0,0,.55);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:'EB Garamond',Georgia,serif;
+  background:var(--bg);
+  color:var(--ink);
+  line-height:1.65;
+  font-size:18px;
+  overflow-x:hidden;
+}
+h1,h2,h3,.display{font-family:'Cinzel',serif;letter-spacing:.02em}
+a{color:var(--gold);text-decoration:none}
+a:hover{color:var(--gold-hi)}
+.wrap{max-width:1060px;margin:0 auto;padding:0 24px}
+
+/* ── Hero ── */
+.hero{
+  position:relative;
+  min-height:88vh;
+  display:flex;flex-direction:column;justify-content:center;align-items:center;
+  text-align:center;
+  padding:80px 24px 64px;
+  background:
+    linear-gradient(180deg, rgba(21,17,12,.35) 0%, rgba(21,17,12,.82) 70%, var(--bg) 100%),
+    url('https://github.com/user-attachments/assets/3078fe5a-720f-44f7-80d3-8ffcf24e2da7') center/cover no-repeat;
+}
+.hero::after{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  box-shadow:inset 0 0 220px 40px rgba(0,0,0,.75);
+}
+.hero-inner{position:relative;z-index:2;max-width:760px}
+.title{
+  font-size:clamp(54px,11vw,128px);
+  font-weight:900;
+  color:var(--gold);
+  text-shadow:0 4px 30px rgba(0,0,0,.8),0 1px 0 #2a1e0e;
+  line-height:.95;
+  margin-bottom:14px;
+}
+.tagline{
+  font-size:clamp(19px,2.6vw,26px);
+  color:var(--ink);
+  font-style:italic;
+  margin-bottom:8px;
+}
+.subline{color:var(--ink-dim);font-size:16px;letter-spacing:.06em;text-transform:uppercase;margin-bottom:36px}
+
+.btn{
+  display:inline-flex;align-items:center;gap:12px;
+  font-family:'Cinzel',serif;font-weight:700;font-size:20px;
+  padding:16px 34px;border-radius:4px;
+  color:#1a1209;
+  background:linear-gradient(180deg,var(--gold-hi),var(--gold));
+  border:1px solid #8c6520;
+  box-shadow:0 6px 22px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.35);
+  transition:transform .12s ease,box-shadow .12s ease;
+  cursor:pointer;
+}
+.btn:hover{transform:translateY(-2px);color:#1a1209;box-shadow:0 10px 28px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.45)}
+.btn:active{transform:translateY(0)}
+.btn .sz{font-family:'EB Garamond',serif;font-weight:400;font-size:14px;opacity:.7}
+.plat{margin-top:14px;color:var(--ink-dim);font-size:14px;letter-spacing:.04em}
+
+/* ── Sections ── */
+section{padding:72px 0}
+.section-head{text-align:center;margin-bottom:44px}
+.section-head h2{
+  font-size:clamp(28px,4.5vw,40px);color:var(--gold);
+  display:inline-block;position:relative;padding-bottom:14px;
+}
+.section-head h2::after{
+  content:"";position:absolute;bottom:0;left:50%;transform:translateX(-50%);
+  width:70px;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);
+}
+.section-head p{color:var(--ink-dim);margin-top:10px}
+
+.alt{background:linear-gradient(180deg,var(--bg),var(--bg2),var(--bg))}
+
+/* ── Trailer ── */
+.trailer{max-width:680px;margin:0 auto;text-align:center}
+.trailer .frame{
+  background:var(--panel);border:1px solid var(--panel-edge);border-radius:8px;
+  padding:30px 28px;box-shadow:0 10px 30px var(--shadow);
+}
+.trailer audio{width:100%;margin-top:6px}
+.trailer .note{color:var(--ink-dim);font-size:15px;margin-top:14px;font-style:italic}
+
+/* ── Features ── */
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:20px}
+.card{
+  background:var(--panel);border:1px solid var(--panel-edge);border-radius:8px;
+  padding:26px 24px;box-shadow:0 6px 18px var(--shadow);
+  transition:transform .15s ease,border-color .15s ease;
+}
+.card:hover{transform:translateY(-3px);border-color:var(--gold)}
+.card .ic{font-size:30px;margin-bottom:12px;display:block}
+.card h3{font-size:20px;color:var(--gold-hi);margin-bottom:8px;font-weight:500}
+.card p{color:var(--ink-dim);font-size:16px}
+
+/* ── Gallery ── */
+.gallery{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+.gallery img{
+  width:100%;height:100%;object-fit:cover;border-radius:6px;display:block;
+  border:1px solid var(--panel-edge);box-shadow:0 6px 18px var(--shadow);
+  aspect-ratio:16/9;cursor:zoom-in;transition:transform .2s ease,border-color .2s ease;
+}
+.gallery img:hover{transform:scale(1.015);border-color:var(--gold)}
+.gallery a:first-child{grid-column:1/-1}
+.gallery a:first-child img{aspect-ratio:21/9}
+
+/* ── Controls ── */
+.controls{max-width:760px;margin:0 auto;background:var(--panel);border:1px solid var(--panel-edge);
+  border-radius:8px;padding:30px 34px;box-shadow:0 6px 18px var(--shadow)}
+.controls dl{display:grid;grid-template-columns:auto 1fr;gap:10px 22px;align-items:baseline}
+.controls dt{font-family:'Cinzel',serif;color:var(--gold);font-size:15px;white-space:nowrap}
+.controls dd{color:var(--ink-dim)}
+kbd{
+  font-family:'Cinzel',serif;font-size:13px;background:#0f0b07;color:var(--ink);
+  border:1px solid var(--panel-edge);border-bottom-width:2px;border-radius:4px;
+  padding:2px 8px;margin:0 1px;display:inline-block;
+}
+
+/* ── Footer ── */
+footer{padding:48px 0 64px;text-align:center;color:var(--ink-dim);border-top:1px solid var(--panel-edge);background:var(--bg2)}
+footer .small{font-size:14px;margin-top:10px;opacity:.7}
+
+/* lightbox */
+.lb{position:fixed;inset:0;background:rgba(5,3,1,.92);display:none;align-items:center;justify-content:center;z-index:99;padding:30px;cursor:zoom-out}
+.lb.open{display:flex}
+.lb img{max-width:96vw;max-height:92vh;border-radius:6px;box-shadow:0 20px 60px #000}
+
+@media(max-width:640px){
+  body{font-size:17px}
+  .gallery{grid-template-columns:1fr}
+  .gallery a:first-child img{aspect-ratio:16/9}
+  .controls dl{grid-template-columns:1fr;gap:2px 0}
+  .controls dt{margin-top:12px}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="hero-inner">
+    <h1 class="title">WARBELL</h1>
+    <p class="tagline">The bell rings every night now. And every night you're on the wall.</p>
+    <p class="subline">A knight · a keep · a five-biome island under siege</p>
+    <a class="btn" href="https://github.com/miskibin/warbell-game/releases/latest/download/warbell-windows.zip" id="download">
+      ⚔ Download for Windows <span class="sz">· free</span>
+    </a>
+    <p class="plat">Windows 10/11 · 64-bit · unzip &amp; run <code>warbell.exe</code></p>
+  </div>
+</header>
+
+<section class="trailer-sec">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>Listen</h2>
+      <p>The opening narration — hero, townsfolk, and the horde beyond the wall.</p>
+    </div>
+    <div class="trailer">
+      <div class="frame">
+        <audio controls preload="metadata" src="warbell-trailer-audio.mp3"></audio>
+        <p class="note">"This island was quiet once. Forest, snow, a little wind. Nothing out here but the wolves…"</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="alt">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>What you're defending</h2>
+    </div>
+    <div class="grid">
+      <div class="card"><span class="ic">🏰</span><h3>Hold the keep</h3><p>Nightly ork sieges hammer the walls. Repair, fortify, and stand the line until dawn.</p></div>
+      <div class="card"><span class="ic">⚔️</span><h3>Real-time combat</h3><p>Swing, block, crit. Grunts, scouts, berserkers and warp-casting shamans, each with their own brain.</p></div>
+      <div class="card"><span class="ic">🌲</span><h3>Five biomes</h3><p>Forest, snow, desert, rock and swamp on one island — each with its own camp, wildlife and weather.</p></div>
+      <div class="card"><span class="ic">🪓</span><h3>Build an economy</h3><p>Gather stone, ore and gold by day. Recruit villagers. Trade at the merchant stall.</p></div>
+      <div class="card"><span class="ic">🌳</span><h3>Upgrade tree</h3><p>Spend at the War Table — blade, armor, abilities. Climb the bloodline as it grows stronger.</p></div>
+      <div class="card"><span class="ic">🔓</span><h3>Free the caged</h3><p>The horde pens captives like cattle. Clear a warband, open the cage, and they fight at your side.</p></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="section-head">
+      <h2>The island</h2>
+    </div>
+    <div class="gallery">
+      <a href="https://github.com/user-attachments/assets/9b80b27f-688b-4f4d-b13d-7919d156d598"><img loading="lazy" src="https://github.com/user-attachments/assets/9b80b27f-688b-4f4d-b13d-7919d156d598" alt="Warbell — the keep at the heart of the island"></a>
+      <a href="https://github.com/user-attachments/assets/b699a1cc-7df4-47c3-ab31-1b5a8fd670c6"><img loading="lazy" src="https://github.com/user-attachments/assets/b699a1cc-7df4-47c3-ab31-1b5a8fd670c6" alt="Warbell screenshot"></a>
+      <a href="https://github.com/user-attachments/assets/3d6e62b8-6159-4055-9e25-6a1dc361f8e3"><img loading="lazy" src="https://github.com/user-attachments/assets/3d6e62b8-6159-4055-9e25-6a1dc361f8e3" alt="Warbell screenshot"></a>
+      <a href="https://github.com/user-attachments/assets/09f16620-9098-4f3d-9eda-9a4e4694cad7"><img loading="lazy" src="https://github.com/user-attachments/assets/09f16620-9098-4f3d-9eda-9a4e4694cad7" alt="Warbell screenshot"></a>
+      <a href="https://github.com/user-attachments/assets/c76da516-d9ee-4776-9507-b6a5b3ca9b78"><img loading="lazy" src="https://github.com/user-attachments/assets/c76da516-d9ee-4776-9507-b6a5b3ca9b78" alt="Warbell screenshot"></a>
+      <a href="https://github.com/user-attachments/assets/445809c9-5443-4e2c-857f-f8b3f228a9bc"><img loading="lazy" src="https://github.com/user-attachments/assets/445809c9-5443-4e2c-857f-f8b3f228a9bc" alt="Warbell screenshot"></a>
+      <a href="https://github.com/user-attachments/assets/e9fd7230-3756-464c-aff6-1f39bb616313"><img loading="lazy" src="https://github.com/user-attachments/assets/e9fd7230-3756-464c-aff6-1f39bb616313" alt="Warbell screenshot"></a>
+      <a href="https://github.com/user-attachments/assets/09f16620-9098-4f3d-9eda-9a4e4694cad7" style="display:none"></a>
+    </div>
+  </div>
+</section>
+
+<section class="alt">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>Controls</h2>
+    </div>
+    <div class="controls">
+      <dl>
+        <dt>WASD / Arrows</dt><dd>Move</dd>
+        <dt>LMB · RMB</dt><dd>Attack · block</dd>
+        <dt>Shift · Space</dt><dd>Sprint · jump</dd>
+        <dt><kbd>E</kbd></dt><dd>Interact — War Table (upgrades), merchant stall (shop), war bell (ring in the night)</dd>
+        <dt><kbd>I</kbd> · <kbd>F</kbd> · <kbd>R</kbd></dt><dd>Satchel · open chest / forage / rescue · recruit</dd>
+        <dt><kbd>Q</kbd> <kbd>Z</kbd> <kbd>X</kbd> <kbd>C</kbd></dt><dd>Eat food · quick-slot items</dd>
+        <dt><kbd>`</kbd></dt><dd>Toggle free-roam fly-cam ↔ follow-cam</dd>
+        <dt><kbd>P</kbd> / <kbd>Esc</kbd></dt><dd>Pause</dd>
+      </dl>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p class="display" style="color:var(--gold);font-size:22px">WARBELL</p>
+    <p style="margin-top:8px"><a href="https://github.com/miskibin/warbell-game/releases/latest/download/warbell-windows.zip">Download</a> · built with <a href="https://bevyengine.org">Bevy</a> + Rust</p>
+    <p class="small">A game by miskibin. Made with care, swords, and far too many orks.</p>
+  </div>
+</footer>
+
+<div class="lb" id="lb"><img src="" alt=""></div>
+<script>
+// lightbox
+const lb=document.getElementById('lb'),lbi=lb.querySelector('img');
+document.querySelectorAll('.gallery a').forEach(a=>{
+  if(!a.querySelector('img'))return;
+  a.addEventListener('click',e=>{e.preventDefault();lbi.src=a.getAttribute('href');lb.classList.add('open')});
+});
+lb.addEventListener('click',()=>lb.classList.remove('open'));
+document.addEventListener('keydown',e=>{if(e.key==='Escape')lb.classList.remove('open')});
+</script>
+</body>
+</html>

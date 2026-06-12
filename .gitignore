@@ -1,0 +1,4 @@
+# Release packaging artifacts — the zip ships via GitHub Releases, not in the repo tree.
+_stage/
+warbell-windows.zip
+*.exe
