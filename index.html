@@ -98,8 +98,7 @@
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
-html:not(.lenis){scroll-behavior:smooth}
-.lenis.lenis-smooth{scroll-behavior:auto!important}
+html{scroll-behavior:smooth}
 body{
   font-family:'EB Garamond',Georgia,serif;
   background:var(--bg);color:var(--ink);
@@ -434,10 +433,10 @@ footer .sm{font-size:13px;opacity:.6;letter-spacing:.03em}
 <div class="stats">
   <div class="wrap">
     <div class="stats-grid">
-      <div class="stat rv"><div class="num" data-count="5">5</div><div class="lbl">Biomes</div></div>
-      <div class="stat rv rv-2"><div class="num" data-count="8">8</div><div class="lbl">Nights to survive</div></div>
-      <div class="stat rv rv-3"><div class="num" data-count="4">4</div><div class="lbl">Ork breeds</div></div>
-      <div class="stat rv rv-4"><div class="num">∞</div><div class="lbl">The bloodline</div></div>
+      <div class="stat rv"><div class="num" data-count="126">126</div><div class="lbl">Voice lines</div></div>
+      <div class="stat rv rv-2"><div class="num" data-count="13">13</div><div class="lbl">Wildlife species</div></div>
+      <div class="stat rv rv-3"><div class="num" data-count="30" data-suffix="+">30+</div><div class="lbl">Hand-built models</div></div>
+      <div class="stat rv rv-4"><div class="num" data-count="58" data-suffix="K">58K</div><div class="lbl">Lines of Rust</div></div>
     </div>
   </div>
 </div>
@@ -560,7 +559,6 @@ footer .sm{font-size:13px;opacity:.6;letter-spacing:.03em}
 
 <div class="lb" id="lb"><img src="" alt=""></div>
 
-<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.14/dist/lenis.min.js" defer></script>
 <script>
 // floating motes
 (function(){
@@ -606,8 +604,10 @@ if(ba){
 // scroll reveal + count-up (fail-safe: content can never stay invisible)
 function countUp(n){
   if(n.dataset.done)return;n.dataset.done=1;
-  const tgt=+n.dataset.count;let c=0;const step=Math.max(1,Math.ceil(tgt/24));
-  const t=setInterval(()=>{c+=step;if(c>=tgt){c=tgt;clearInterval(t);}n.textContent=c;},34);
+  const tgt=+n.dataset.count, suf=n.dataset.suffix||'';
+  let c=0;const step=Math.max(1,Math.ceil(tgt/30));
+  n.textContent='0'+suf;
+  const t=setInterval(()=>{c+=step;if(c>=tgt){c=tgt;clearInterval(t);}n.textContent=c+suf;},28);
 }
 function reveal(el){
   if(el.classList.contains('in'))return;
@@ -630,7 +630,12 @@ function sweep(){
 }
 window.addEventListener('load',sweep);
 window.addEventListener('scroll',sweep,{passive:true});
+window.addEventListener('resize',sweep,{passive:true});
+// if the page loaded while the tab was backgrounded (observer paused), sweep on return
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)sweep();});
 sweep();
+// hard guarantee — content can never stay invisible even if the observer never fires
+setTimeout(()=>rvEls.forEach(el=>{if(el.getBoundingClientRect().top<innerHeight*1.4)reveal(el);}),2600);
 
 // lightbox
 const lb=document.getElementById('lb'),lbi=lb.querySelector('img');
@@ -640,20 +645,12 @@ document.querySelectorAll('.gal a,.biome').forEach(a=>{
 lb.addEventListener('click',()=>lb.classList.remove('open'));
 document.addEventListener('keydown',e=>{if(e.key==='Escape')lb.classList.remove('open');});
 
+// (native scroll — anchor links use CSS scroll-behavior:smooth; no smooth-scroll lib so
+// nothing can intercept the wheel over a section)
+
 // heir torches (SVG injected)
 const torch='<svg viewBox="0 0 38 54"><rect x="16" y="20" width="6" height="30" rx="2" fill="#5a4326"/><rect x="13" y="18" width="12" height="6" rx="2" fill="#3c2c18"/><g class="flame"><path d="M19 2c4 5 6 8 6 12a6 6 0 1 1-12 0c0-3 2-6 6-12z" fill="#f4cd78"/><path d="M19 7c2 3 3 5 3 7a3 3 0 1 1-6 0c0-2 1-4 3-7z" fill="#dd5a45"/></g></svg>';
 document.querySelectorAll('.heir').forEach(h=>h.innerHTML=torch);
-
-// Lenis smooth scroll (after it loads)
-window.addEventListener('load',()=>{
-  if(typeof Lenis==='undefined'||matchMedia('(prefers-reduced-motion:reduce)').matches)return;
-  const lenis=new Lenis({duration:1.1,smoothWheel:true});
-  function raf(t){lenis.raf(t);requestAnimationFrame(raf);}requestAnimationFrame(raf);
-  document.querySelectorAll('a[href^="#"]').forEach(a=>{
-    a.addEventListener('click',e=>{const id=a.getAttribute('href');if(id.length<2)return;
-      const el=document.querySelector(id);if(el){e.preventDefault();lenis.scrollTo(el,{offset:-50});}});
-  });
-});
 </script>
 </body>
 </html>
